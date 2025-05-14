@@ -1,0 +1,37 @@
+# Source directory: my_cuda_app/src/CMakeLists.txt
+include(${CMAKE_SOURCE_DIR}/helpers.cmake)
+set(name ConanCuda)
+
+get_package_list(packages)
+get_upstream_recipes(recipes)
+
+find_packages("${packages}")
+find_nccl()
+file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
+file(GLOB_RECURSE LIB_HEADERS "lib/*.h" "lib/*.hpp")
+
+
+
+# Copy the resources folder to build directory at build-time
+add_custom_target(copy_resources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/resources"
+        "${CMAKE_BINARY_DIR}/resources"
+        COMMENT "Copying resources into build"
+)
+
+add_executable(${name} main.cu ${LIB_SOURCES} ${LIB_HEADERS})
+
+add_dependencies(${name} copy_resources)
+
+# Position‑independent for shared‑lib deps & sanitizers
+set_target_properties(${name} PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        CUDA_SEPARABLE_COMPILATION ON
+        CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES}
+)
+
+target_link_all_packages("${recipes}" "${name}")
+
+target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
+target_link_libraries( ${name} PRIVATE NCCL::NCCL)
