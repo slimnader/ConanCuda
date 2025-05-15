@@ -3,16 +3,44 @@ import sys
 from typing import Dict
 
 import yaml
+
+
 class Dependency:
 
-    def __init__(self, find_package: str, upstream_recipe_var: str = None, ):
+    def __init__(
+            self,
+            find_package: str,
+            upstream_recipe: str = None,
+            upstream_recipe_var: str = None,
+
+    ):
         self.find_package = find_package
-        self.upstream_recipe = f"{find_package}::{find_package if upstream_recipe_var is None else upstream_recipe_var}"
+        if upstream_recipe is None:
+            self.upstream_recipe = f"{find_package}::{find_package if upstream_recipe_var is None else upstream_recipe_var}"
+        else:
+            self.upstream_recipe = upstream_recipe
 
+"""
+This is a driver for any packages/target_libs that dont have a single string orthodoxy
+e.g:
+if not:
+    find_package(fmt)
+    .....
+    .....
+    target_link_library(some_exc_or_package_name PRIVATE fmt::fmt)
+    
 
-
+"""
 overrides: dict[str, Dependency] = {
-    "redis-plus-plus": Dependency("redis++", "redis++_static")
+    "redis-plus-plus": Dependency(
+        find_package="redis++",
+        upstream_recipe_var="redis++_static"
+    ),
+    "gtest": Dependency(
+        find_package="GTest",
+        upstream_recipe="gtest::gtest"
+    )
+
 }
 
 
@@ -25,14 +53,11 @@ class Dependencies:
         requirements: list[str] = []
         with open(f"{script_dir}/conandata.yml", 'r') as conandata:
             requirements = yaml.safe_load(conandata).get("requirements", [])
-        # deps: list[Dependency] = list(filter(lambda dep: dep not in overrides.keys(), map(
-        #     lambda requirement: Dependency(requirement.split("/")[0]), requirements
-        # )))
+
         self.dependencies = list(
             map(lambda reponame: Dependency(reponame) if reponame not in overrides.keys() else overrides[reponame],
                 map(lambda req: req.split("/")[0],
                     requirements)))
-
 
     def find_packages(self):
         return ";".join(list(map(lambda dep: dep.find_package, self.dependencies)))
