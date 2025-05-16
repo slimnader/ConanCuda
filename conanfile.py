@@ -9,10 +9,9 @@ from conan.tools.cmake import (
 
 import os
 
-dependencies = [
-    "fmt/11.1.4",
-    "nlohmann_json/3.12.0"
-]
+"""
+This is for the CmakeToolchain object
+"""
 cached_env_vars = {
     "CMAKE_CUDA_ARCHITECTURES": "86",
     "CMAKE_CUDA_FLAGS": ("--extended-lambda --threads 4"),
@@ -69,13 +68,15 @@ class ConanCuda(ConanFile):
     # ---------------------------------------------------------------------
     def generate(self):
         toolchain_var = CMakeToolchain(self)
+        for cached_env_var in cached_env_vars.keys():
+            toolchain_var.cache_variables[cached_env_var] = cached_env_vars[cached_env_var]
         # You can force a specific compute capability; comment out to use default:
-        toolchain_var.cache_variables["CMAKE_CUDA_ARCHITECTURES"] = "86"  # Ampere; use ALL for fat‑bin
-        toolchain_var.cache_variables["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON"
-        # Forward Conan build type → CUDA rel‑dbg flags
-        toolchain_var.cache_variables["CMAKE_CUDA_FLAGS"] = (
-            "--extended-lambda --threads 4"  # example flags; adjust as needed
-        )
+        # toolchain_var.cache_variables["CMAKE_CUDA_ARCHITECTURES"] = "86"  # Ampere; use ALL for fat‑bin
+        # toolchain_var.cache_variables["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON"
+        # # Forward Conan build type → CUDA rel‑dbg flags
+        # toolchain_var.cache_variables["CMAKE_CUDA_FLAGS"] = (
+        #     "--extended-lambda --threads 4"  # example flags; adjust as needed
+        # )
         toolchain_var.generate()
 
         deps = CMakeDeps(self)

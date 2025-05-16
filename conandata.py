@@ -40,7 +40,6 @@ overrides: dict[str, Dependency] = {
         find_package="GTest",
         upstream_recipe="gtest::gtest"
     )
-
 }
 
 
