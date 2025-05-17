@@ -4,7 +4,7 @@
         "conan": {}
     },
     "include": [
-        "../cmake-build-wsl-debug/conan/build-debug/conan/CMakePresets.json",
-        "../release/conan/build-release/conan/CMakePresets.json"
+        "../release/conan/build-release/conan/CMakePresets.json",
+        "../cmake-build-wsl-debug/conan/build-debug/conan/CMakePresets.json"
     ]
 }

@@ -1,36 +1,19 @@
 
-function(get_package_list packages)
+function(load_conan_deps)
     execute_process(
-            COMMAND bash -c "python3  ${CMAKE_SOURCE_DIR}/conandata.py find_packages"
-            OUTPUT_VARIABLE package_list
+        COMMAND bash -c [=[
+            conan install . --output-folder=./test_folder  \
+            && mv ./test_folder/build-release/conan/conandeps_legacy.cmake ./src/packages.cmake  \
+            && chmod -x ./src/packages.cmake \
+            && sed -i '1i\\'  ./src/packages.cmake \
+            && sed -i '1i\#This is a generated cmake copy of conandeps_legacy\.cmake'  ./src/packages.cmake \
+            && rm -rf ./test_folder
+
+    ]=]
+
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
             OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    set(
-            ${packages} # output variable
-            "${package_list}" #list casted as string delimited by ;
-            PARENT_SCOPE
-    )
-endfunction()
-
-function(get_upstream_recipes recipes)
-    execute_process(
-            COMMAND bash -c "python3  ${CMAKE_SOURCE_DIR}/conandata.py upstream_recipes"
-            OUTPUT_VARIABLE recipe_list
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    set(
-            ${recipes} # output variable
-            "${recipe_list}" #list casted as string delimited by ;
-            PARENT_SCOPE
-    )
-endfunction()
-
-function(find_packages packages)
-    message(STATUS "finding packages ${packages}")
-    foreach (package IN LISTS packages)
-        message(STATUS "Finding package ${package}")
-        find_package(${package})
-    endforeach ()
 endfunction()
 
 function(target_link_all_packages recipes project_name)
@@ -40,6 +23,9 @@ function(target_link_all_packages recipes project_name)
         target_link_libraries(${project_name} PRIVATE "${recipe}")
     endforeach ()
 endfunction()
+
+
+#FOR NCCL exclusively
 
 function(find_nccl)
     # 1) look for the header

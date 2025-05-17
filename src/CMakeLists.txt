@@ -1,12 +1,12 @@
 # Source directory: my_cuda_app/src/CMakeLists.txt
 include(${CMAKE_SOURCE_DIR}/helpers.cmake)
+include(./packages.cmake)
 set(name ConanCuda)
 
-get_package_list(packages)
-get_upstream_recipes(recipes)
 
-find_packages("${packages}")
+
 find_nccl()
+
 file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
 file(GLOB_RECURSE LIB_HEADERS "lib/*.h" "lib/*.hpp")
 
@@ -31,7 +31,7 @@ set_target_properties(${name} PROPERTIES
         CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES}
 )
 
-target_link_all_packages("${recipes}" "${name}")
+target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
 
 target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
 target_link_libraries( ${name} PRIVATE NCCL::NCCL)

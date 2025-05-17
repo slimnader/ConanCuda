@@ -4,3 +4,4 @@ venv
 venv_linux
 release
 .idea
+test*
