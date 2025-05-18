@@ -2,7 +2,7 @@
 function(load_conan_deps)
     execute_process(
         COMMAND bash -c [=[
-            conan install . --output-folder=./test_folder  \
+            conan install . --output-folder=./test_folder --build=missing  \
             && mv ./test_folder/build-release/conan/conandeps_legacy.cmake ./src/packages.cmake  \
             && chmod -x ./src/packages.cmake \
             && sed -i '1i\\'  ./src/packages.cmake \
