@@ -40,7 +40,7 @@ Boilerplate Code for a Cuda + NCCL Conan project
     venv_bin_folder="$(find . -type d | grep 'bin$'| sed 's/\.//g')"
     conan_command="" 
     if [[ ! -z $venv_bin_folder ]]; then
-        path="$PWD/venv_linux/bin:$PATH:$PATH"
+        path="${PWD}venv_linux/bin:$PATH:$PATH"
         export PATH=$path
         conan_command="$PWD$venv_bin_folder/conan"
     else 
@@ -49,8 +49,8 @@ Boilerplate Code for a Cuda + NCCL Conan project
     export PATH=$path
     cmake -S . -B debug \
       -DCMAKE_BUILD_TYPE=Debug \
-      -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="$PWD/conan_provider.cmake" \ 
-      -DCONAN_COMMAND="$PWD/venv_linux/bin/conan"
+      -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="${PWD}conan_provider.cmake" \ 
+      -DCONAN_COMMAND="${PWD}venv_linux/bin/conan"
 
     # build
     cmake --build release --config Release -- -j"$(nproc)" VERBOSE=1

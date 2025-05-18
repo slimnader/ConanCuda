@@ -38,7 +38,7 @@ function cmd_release() {
 venv_bin_folder="$(find . -type d | grep 'bin$'| sed 's/\.//g')"
     conan_command=""
     if [[ ! -z $venv_bin_folder ]]; then
-        path="$PWD/venv_linux/bin:$PATH:$PATH"
+        path="${PWD}venv_linux/bin:$PATH:$PATH"
         conan_command="$PWD$venv_bin_folder/conan"
     else
       conan_command=$(which conan)
@@ -47,8 +47,8 @@ venv_bin_folder="$(find . -type d | grep 'bin$'| sed 's/\.//g')"
     export PATH=$path
     cmake -S . -B release \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="$PWD/conan_provider.cmake" \
-      -DCONAN_COMMAND="$PWD/venv_linux/bin/conan"
+      -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="${PWD}conan_provider.cmake" \
+      -DCONAN_COMMAND="${PWD}venv_linux/bin/conan"
 
     # build
     cmake --build release --config Release -- -j"$(nproc)" VERBOSE=1
