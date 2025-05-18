@@ -5,3 +5,4 @@ venv_linux
 release
 .idea
 test*
+src/CMakeUserPresets.json
