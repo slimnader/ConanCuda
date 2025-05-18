@@ -6,3 +6,4 @@ release
 .idea
 test*
 src/CMakeUserPresets.json
+src/packages.cmake
