@@ -13,7 +13,7 @@ import os
 This is for the CmakeToolchain object
 """
 cached_env_vars = {
-    "CMAKE_CUDA_ARCHITECTURES": "86",
+    "CMAKE_CUDA_ARCHITECTURES": "80 86 87",
     "CMAKE_CUDA_FLAGS": ("--extended-lambda --threads 4"),
     "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
 }
