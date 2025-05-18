@@ -29,6 +29,7 @@ set_target_properties(${name} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         CUDA_SEPARABLE_COMPILATION ON
         CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES}
+        COMPILE_OPTIONS -G
 )
 
 target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
