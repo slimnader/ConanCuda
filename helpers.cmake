@@ -7,7 +7,7 @@ function(load_conan_deps)
             && chmod -x ./src/packages.cmake \
             && sed -i '1i\\'  ./src/packages.cmake \
             && sed -i '1i\#This is a generated cmake copy of conandeps_legacy\.cmake'  ./src/packages.cmake \
-            && printf '\n\n%s\n' "$(grep '^set' ./test_folder/build-release/conan/conan_toolchain.cmake)">>./src/packages.cmake \
+            && printf '\n\n%s\n' "$(python3 conanfile.py cached_vars_force)">>./src/packages.cmake \
             && rm -rf ./test_folder
 
     ]=]

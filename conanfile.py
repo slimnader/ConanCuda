@@ -1,4 +1,6 @@
 # SPDX‑License‑Identifier: MIT
+import sys
+
 import yaml
 from conan import ConanFile
 from conan.tools.cmake import (
@@ -10,12 +12,23 @@ from conan.tools.cmake import (
 import os
 
 """
-This is for the CmakeToolchain object
+This is for the CmakeToolchain object for the conan_toolchains.cmake
 """
-cached_env_vars = {
-    "CMAKE_CUDA_ARCHITECTURES": "80 86 87",
+variables = {
+    "CMAKE_CUDA_ARCHITECTURES": "80;86;87",
     "CMAKE_CUDA_FLAGS": ("--extended-lambda --threads 4"),
     "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
+}
+
+"""
+This is for the CmakeToolchain object for the conan_toolchains.cmake
+"""
+cached_env_vars = {
+    # "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": f"{os.getcwd()}/conan_provider.cmake",
+    # "CONAN_COMMAND": f"{os.getcwd()}/venv_linux/bin/conan",
+    # "CUSTOM_CUDA_ARCHITECTURES": "80;86;87",
+    # "CMAKE_CUDA_FLAGS": ("--extended-lambda --threads 4"),
+    # "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
 }
 
 
@@ -61,22 +74,23 @@ class ConanCuda(ConanFile):
     # ---------------------------------------------------------------------
     def layout(self):
         from conan.tools.layout import basic_layout
-        basic_layout(self, src_folder="src")  # keeps sources under ./src
+        basic_layout(
+            self,
+            # src_folder="src"
+        )  # keeps sources under ./src
 
     # ---------------------------------------------------------------------
     # ♦ Toolchain generation ♦
     # ---------------------------------------------------------------------
     def generate(self):
         toolchain_var = CMakeToolchain(self)
+
+        for environment_variable in variables.keys():
+            toolchain_var.variables[environment_variable] = variables[environment_variable]
+
         for cached_env_var in cached_env_vars.keys():
             toolchain_var.cache_variables[cached_env_var] = cached_env_vars[cached_env_var]
-        # You can force a specific compute capability; comment out to use default:
-        # toolchain_var.cache_variables["CMAKE_CUDA_ARCHITECTURES"] = "86"  # Ampere; use ALL for fat‑bin
-        # toolchain_var.cache_variables["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON"
-        # # Forward Conan build type → CUDA rel‑dbg flags
-        # toolchain_var.cache_variables["CMAKE_CUDA_FLAGS"] = (
-        #     "--extended-lambda --threads 4"  # example flags; adjust as needed
-        # )
+
         toolchain_var.generate()
 
         deps = CMakeDeps(self)
@@ -110,3 +124,8 @@ class ConanCuda(ConanFile):
     def package_info(self):
         self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
 
+
+def cached_vars_force():
+    return "\n".join(list(map(lambda variable: f"set({variable} \"{variables[variable]}\" CACHE STRING \"definition override {variable}\" FORCE)" ,variables.keys())))
+if __name__ == "__main__":
+    print(eval(f"{sys.argv[1]}()"))

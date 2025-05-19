@@ -1,8 +1,9 @@
 # Source directory: my_cuda_app/src/CMakeLists.txt
+#string(TOLOWER "${CMAKE_BUILD_TYPE}" type)
 include(${CMAKE_SOURCE_DIR}/helpers.cmake)
 include(./packages.cmake)
 set(name ConanCuda)
-
+message("BINARY DIR ${CMAKE_BINARY_DIR}  build type -  ${type}")
 
 
 find_nccl()
@@ -24,13 +25,15 @@ add_executable(${name} main.cu ${LIB_SOURCES} ${LIB_HEADERS})
 
 add_dependencies(${name} copy_resources)
 
+
 # Position‑independent for shared‑lib deps & sanitizers
 set_target_properties(${name} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         CUDA_SEPARABLE_COMPILATION ON
-        CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES}
+        CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}"
         COMPILE_OPTIONS -G
 )
+
 
 target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
 
