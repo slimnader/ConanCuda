@@ -1,16 +1,16 @@
 
 function(load_conan_deps)
     execute_process(
-        COMMAND bash -c [=[
+            COMMAND bash -c [=[
             conan install . --output-folder=./test_folder --build=missing  \
             && mv ./test_folder/build-release/conan/conandeps_legacy.cmake ./src/packages.cmake  \
             && chmod -x ./src/packages.cmake \
             && sed -i '1i\\'  ./src/packages.cmake \
             && sed -i '1i\#This is a generated cmake copy of conandeps_legacy\.cmake'  ./src/packages.cmake \
+            && printf '\n\n%s\n' "$(grep '^set' ./test_folder/build-release/conan/conan_toolchain.cmake)">>./src/packages.cmake \
             && rm -rf ./test_folder
 
     ]=]
-
             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
             OUTPUT_STRIP_TRAILING_WHITESPACE
     )
