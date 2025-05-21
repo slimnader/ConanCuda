@@ -23,7 +23,7 @@ Boilerplate Code for a Cuda + NCCL Conan project
 | macOS                    | ❌ Not supported     |
 
 
-> ⚠️ **Note:** Native Windows is not supported—please run under WSL 2 on Windows.
+> ⚠️ **Note:** Native Windows is not supported—please run under WSL 2 on Windows. Ubuntu Preferred
 
 ### Configuration
 - **CMake** ≥ 3.20

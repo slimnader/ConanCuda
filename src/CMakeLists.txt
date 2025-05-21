@@ -1,17 +1,11 @@
 # Source directory: my_cuda_app/src/CMakeLists.txt
-#string(TOLOWER "${CMAKE_BUILD_TYPE}" type)
 include(${CMAKE_SOURCE_DIR}/helpers.cmake)
 include(./packages.cmake)
 set(name ConanCuda)
-message("BINARY DIR ${CMAKE_BINARY_DIR}  build type -  ${type}")
-
 
 find_nccl()
-
 file(GLOB_RECURSE LIB_SOURCES "lib/*.cpp")
 file(GLOB_RECURSE LIB_HEADERS "lib/*.h" "lib/*.hpp")
-
-
 
 # Copy the resources folder to build directory at build-time
 add_custom_target(copy_resources ALL
