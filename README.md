@@ -6,6 +6,10 @@ Boilerplate Code for a Cuda + NCCL Conan project
     - [Platform Support](#platform-support)
     - [Configuration](#configuration)
 - [Getting Started](#getting-started)
+  - [Scaffolding](#scaffolding)
+    - [Shim Cmake and Python](#shim-cmake-and-python)
+    - [Conan](#conan-)
+  - [Simple Build Script](#simple-build-script)
 - [Conan Libraries](#conan-libraries)
 - [Toolchain Environment Variables](#toolchain-environment-variables)
 - [NCCL](#nccl)
@@ -35,14 +39,31 @@ Boilerplate Code for a Cuda + NCCL Conan project
 
 ## Getting Started
 
+### Scaffolding
+#### Shim Cmake and Python
+
+```shell
+asdf plugin add python
+asdf plugin add cmake
+asdf install
+```
+
+#### Conan 
+
+```shell
+python3 -m venv venv_linux
+source ./venv_linux/bin/activate
+pip3 install conan
+```
+
 ### Simple Build Script
 ```shell
     venv_bin_folder="$(find . -type d | grep 'bin$'| sed 's/\.//g')"
     conan_command="" 
     if [[ ! -z $venv_bin_folder ]]; then
-        path="${PWD}venv_linux/bin:$PATH:$PATH"
+        path="${PWD}/${venv_bin_folder:1}$PATH:$PATH"
         export PATH=$path
-        conan_command="$PWD$venv_bin_folder/conan"
+        conan_command="$PWD/${venv_bin_folder:1}/conan"
     else 
       conan_command=$(which conan)
     fi
