@@ -4,7 +4,7 @@ function(load_conan_deps)
             COMMAND bash -c [=[
             conan install . --output-folder=./test_folder --build=missing  \
             && mv ./test_folder/build-release/conan/conandeps_legacy.cmake ./src/packages.cmake  \
-            && chmod -x ./src/packages.cmake \
+            && chmod +x ./src/packages.cmake \
             && sed -i '1i\\'  ./src/packages.cmake \
             && sed -i '1i\#This is a generated cmake copy of conandeps_legacy\.cmake'  ./src/packages.cmake \
             && printf '\n\n%s\n' "$(python3 conanfile.py cached_vars_force)">>./src/packages.cmake \
