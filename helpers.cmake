@@ -2,6 +2,9 @@
 function(load_conan_deps)
     execute_process(
             COMMAND bash -c [=[
+            if [[ -z $(which conan | grep $PWD) ]]; then \
+               source "$(find . -type f | grep bin/activate$ | head -n 1)"; \
+            fi  && \
             conan install . --output-folder=./test_folder --build=missing  \
             && mv ./test_folder/build-release/conan/conandeps_legacy.cmake ./src/packages.cmake  \
             && chmod +x ./src/packages.cmake \
