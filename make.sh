@@ -29,7 +29,7 @@ function cmd_debug() {
       -DCONAN_COMMAND="$conan_command"
 
     # build
-    cmake --build release --config Debug -- -j"$(nproc)" VERBOSE=1
+    cmake --build debug --config Debug -- -j"$(nproc)" VERBOSE=1
 }
 
 function cmd_test(){
