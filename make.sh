@@ -3,6 +3,8 @@
 conan_command=$(realpath "$(find . -type f -path '*/bin/conan' -print -quit)" 2>/dev/null)
 venv=$(realpath "$(find . -type f -path '*/bin/activate' -print -quit)" 2>/dev/null)
 
+
+
 function cmd_release() {
     source $venv
     path="$venv:$PATH:$PATH"
@@ -14,6 +16,20 @@ function cmd_release() {
 
     # build
     cmake --build release --config Release -- -j"$(nproc)" VERBOSE=1
+}
+
+
+function cmd_debug() {
+    source $venv
+    path="$venv:$PATH:$PATH"
+    export PATH=$path
+    cmake -S . -B debug \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="${PWD}/conan_provider.cmake" \
+      -DCONAN_COMMAND="$conan_command"
+
+    # build
+    cmake --build release --config Debug -- -j"$(nproc)" VERBOSE=1
 }
 
 function cmd_test(){
