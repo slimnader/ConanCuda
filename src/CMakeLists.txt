@@ -19,7 +19,6 @@ add_executable(${name} main.cu ${LIB_SOURCES} ${LIB_HEADERS})
 
 add_dependencies(${name} copy_resources)
 
-
 # Position‑independent for shared‑lib deps & sanitizers
 set_target_properties(${name} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
