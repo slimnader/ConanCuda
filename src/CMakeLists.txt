@@ -32,6 +32,7 @@ set_target_properties(${name} PROPERTIES
 target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
 
 target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
+target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/lib)
 target_link_libraries( ${name} PRIVATE NCCL::NCCL)
 
 #CUDA TOOLKIT LIBS - OPTIONAL, Uncomment if needed
