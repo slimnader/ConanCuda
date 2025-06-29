@@ -71,7 +71,7 @@ endfunction()
 
 function(dev_include)
     execute_process(COMMAND bash -c
-            "find ${CMAKE_CURRENT_SOURCE_DIR}/lib | grep h$"
+            "find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f | grep h$"
             OUTPUT_VARIABLE res
     )
 
