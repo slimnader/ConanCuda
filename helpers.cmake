@@ -68,7 +68,8 @@ function(find_nccl)
 endfunction()
 
 
-
+#Because clangd wont lint headers unless they are included in a compiled file, we will have a catch all
+# cpp file (ide_include) which will be included as a library for Debug builds
 function(dev_include)
     execute_process(COMMAND bash -c
             "find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f | grep h$"

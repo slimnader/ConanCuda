@@ -29,6 +29,8 @@ set_target_properties(${name} PROPERTIES
 
 
 target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
+
+#MAKE SURE YOU IFNDEF OR PRAGMA YOUR HEADERS IF YOU ARE GOING TO USE THIS
 dev_include()
 
 target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
