@@ -91,18 +91,12 @@ function(dev_include)
 endfunction()
 
 function(hydrate_ide_index)
-    if(NOT EXISTS "lib/ide_index.cu")
-        return()
-    endif ()
     execute_process(COMMAND bash -c "(find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f -printf '%P\n' | grep h$ | xargs -I{} echo '#include \"{}\"')> ${CMAKE_CURRENT_SOURCE_DIR}/lib/ide_index.cu")
     add_library(ide_index OBJECT "lib/ide_index.cu")
 endfunction()
 
 #use for cpp only
 function(hydrate_ide_index_cpp)
-    if(NOT EXISTS "lib/ide_index.cp")
-        return()
-    endif ()
     execute_process(COMMAND bash -c "(find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f -printf '%P\n' | grep h$ | xargs -I{} echo '#include \"{}\"')> ${CMAKE_CURRENT_SOURCE_DIR}/lib/ide_index.cpp")
     add_library(ide_index OBJECT "lib/ide_index.cpp")
 endfunction()
