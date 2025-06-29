@@ -29,11 +29,7 @@ set_target_properties(${name} PROPERTIES
 
 
 target_link_all_packages("${CONANDEPS_LEGACY}" "${name}")
-
-if(CMAKE_BUILD_TYPE MATCHES "Debug" OR CMAKE_BUILD_TYPE MATCHES "debug")
-    message(STATUS "Including lib compile for dev linting")
-    target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/lib)
-endif ()
+dev_include()
 
 target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
 target_link_libraries( ${name} PRIVATE NCCL::NCCL)

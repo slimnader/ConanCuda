@@ -68,3 +68,41 @@ function(find_nccl)
 endfunction()
 
 
+
+function(dev_include)
+    execute_process(COMMAND bash -c
+            "find ${CMAKE_CURRENT_SOURCE_DIR}/lib | grep h$"
+            OUTPUT_VARIABLE res
+    )
+    message(STATUS "RES ${res}")
+    if(NOT RES)
+        message("no dev include")
+        return()
+    endif ()
+    if (CMAKE_BUILD_TYPE MATCHES "Debug" OR CMAKE_BUILD_TYPE MATCHES "debug")
+        if (NOT CMAKE_CUDA_ARCHITECTURES)
+            message(STATUS "CPP ONLY DEV INCLUDE")
+            hydrate_ide_index_cpp()
+        else ()
+            message(STATUS "CUDA DEV INCLUDE")
+            hydrate_ide_index()
+        endif ()
+    endif ()
+endfunction()
+
+function(hydrate_ide_index)
+    if(NOT EXISTS "lib/ide_index.cu")
+        return()
+    endif ()
+    execute_process(COMMAND bash -c "(find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f -printf '%P\n' | grep h$ | xargs -I{} echo '#include \"{}\"')> ${CMAKE_CURRENT_SOURCE_DIR}/lib/ide_index.cu")
+    add_library(ide_index OBJECT "lib/ide_index.cu")
+endfunction()
+
+#use for cpp only
+function(hydrate_ide_index_cpp)
+    if(NOT EXISTS "lib/ide_index.cp")
+        return()
+    endif ()
+    execute_process(COMMAND bash -c "(find ${CMAKE_CURRENT_SOURCE_DIR}/lib -type f -printf '%P\n' | grep h$ | xargs -I{} echo '#include \"{}\"')> ${CMAKE_CURRENT_SOURCE_DIR}/lib/ide_index.cpp")
+    add_library(ide_index OBJECT "lib/ide_index.cpp")
+endfunction()
