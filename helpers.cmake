@@ -74,8 +74,8 @@ function(dev_include)
             "find ${CMAKE_CURRENT_SOURCE_DIR}/lib | grep h$"
             OUTPUT_VARIABLE res
     )
-    message(STATUS "RES ${res}")
-    if(NOT RES)
+
+    if("${res}" STREQUAL "")
         message("no dev include")
         return()
     endif ()
