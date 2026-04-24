@@ -35,6 +35,7 @@ dev_include()
 
 target_include_directories(${name} PRIVATE ${NCCL_INCLUDE_DIR})
 target_link_libraries( ${name} PRIVATE NCCL::NCCL)
+tests("${name}" "${CONANDEPS_LEGACY}")
 
 #CUDA TOOLKIT LIBS - OPTIONAL, Uncomment if needed
 #target_link_libraries(${name} PRIVATE cublas)

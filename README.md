@@ -84,7 +84,7 @@ pip3 install conan
 Example:
 ```yaml
 requirements:
-  - "conan_lib/version"
+  - "<conan_lib>/<version>"
 
 ```
 ## Toolchain Environment Variables:

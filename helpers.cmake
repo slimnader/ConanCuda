@@ -67,6 +67,59 @@ function(find_nccl)
     set(NCCL_LIBRARY     "${NCCL_LIBRARY}"     PARENT_SCOPE)
 endfunction()
 
+function(include_lib)
+    execute_process(
+            COMMAND bash -c ""
+            OUTPUT_VARIABLE
+    )
+endfunction()
+
+function(tests project_name recipes)
+    if (NOT BUILD_TESTING)
+        return()
+    endif ()
+
+    file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
+            "${CMAKE_SOURCE_DIR}/test/*.cpp"
+            "${CMAKE_SOURCE_DIR}/test/*.cu"
+    )
+
+    if ("${TEST_SOURCES}" STREQUAL "")
+        message(STATUS "no tests")
+        return()
+    endif ()
+
+    set(test_name "${project_name}_tests")
+    add_executable(${test_name} ${TEST_SOURCES} ${LIB_SOURCES} ${LIB_HEADERS})
+
+    target_compile_options(${test_name} PRIVATE
+            $<$<COMPILE_LANGUAGE:CUDA>:-G>
+    )
+
+    set_target_properties(${test_name} PROPERTIES
+            POSITION_INDEPENDENT_CODE ON
+            CUDA_SEPARABLE_COMPILATION ON
+            CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}"
+    )
+
+    target_include_directories(${test_name} PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/lib"
+            "${CMAKE_SOURCE_DIR}/test"
+            ${NCCL_INCLUDE_DIR}
+    )
+
+    target_link_all_packages("${recipes}" "${test_name}")
+    target_link_libraries(${test_name} PRIVATE NCCL::NCCL)
+
+    if (TARGET copy_resources)
+        add_dependencies(${test_name} copy_resources)
+    endif ()
+
+    include(GoogleTest)
+    gtest_discover_tests(${test_name})
+endfunction()
+
+
 
 #Because clangd wont lint headers unless they are included in a compiled file, we will have a catch all
 # cpp file (ide_include) which will be included as a library for Debug builds
