@@ -79,6 +79,9 @@ function(tests project_name recipes)
         return()
     endif ()
 
+    set(test_recipes ${recipes})
+    list(TRANSFORM test_recipes REPLACE "^boost::boost$" "Boost::regex")
+
     file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
             "${CMAKE_SOURCE_DIR}/test/*.cpp"
             "${CMAKE_SOURCE_DIR}/test/*.cu"
@@ -108,7 +111,7 @@ function(tests project_name recipes)
             ${NCCL_INCLUDE_DIR}
     )
 
-    target_link_all_packages("${recipes}" "${test_name}")
+    target_link_all_packages("${test_recipes}" "${test_name}")
     target_link_libraries(${test_name} PRIVATE NCCL::NCCL)
 
     if (TARGET copy_resources)
